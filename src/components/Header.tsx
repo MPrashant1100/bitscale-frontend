@@ -9,7 +9,7 @@ const Header = () => {
   };
 
   return (
-    <div className="flex justify-between items-center p-2 m-2 border-b border-gray-200">
+    <div className="flex justify-between items-center p-3 border-b border-gray-200">
       <div className="flex items-center gap-2">
         <ArrowLeft className="w-4 h-4 text-gray-500" />
         <h2 className="text-sm font-medium text-gray-500 ">Name of the file</h2>
