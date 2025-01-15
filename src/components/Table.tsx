@@ -78,7 +78,6 @@ const Table: React.FC = () => {
   // Add a new row
   const addRow = () => {
     const newRow: TableRow = columns.reduce((acc, col) => {
-      // Populate the "input" column with the current date
       if (col.key === "input") {
         acc[col.key] = getCurrentDate();
       } else {
