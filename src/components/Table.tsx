@@ -1,5 +1,6 @@
 import { CirclePlay } from "lucide-react";
 import React, { useState } from "react";
+import HeadingBar from "./HeadingBar"; // Import the HeadingBar component
 
 interface TableRow {
   [key: string]: string;
@@ -53,15 +54,16 @@ const colData = [
   {
     key: "enrich",
     title: "Enrich Company",
-    icon: "/enrish.svg",
+    icon: "/enrich.svg",
   },
 ];
 
 const Table: React.FC = () => {
   const [data, setData] = useState<TableRow[]>(tableData);
   const [columns, setColumns] = useState<ColumnData[]>(colData);
+  const [activeRow, setActiveRow] = useState(1);
+  const [activeColumn, setActiveColumn] = useState(1);
 
-  // Helper function to format the current date
   const getCurrentDate = () => {
     const now = new Date();
     const options: Intl.DateTimeFormatOptions = {
@@ -75,7 +77,6 @@ const Table: React.FC = () => {
     return now.toLocaleDateString("en-US", options);
   };
 
-  // Add a new row
   const addRow = () => {
     const newRow: TableRow = columns.reduce((acc, col) => {
       if (col.key === "input") {
@@ -88,7 +89,6 @@ const Table: React.FC = () => {
     setData([...data, newRow]);
   };
 
-  // Add a new column
   const addColumn = () => {
     const newKey = `column${columns.length + 1}`;
     const newColumn: ColumnData = {
@@ -100,7 +100,6 @@ const Table: React.FC = () => {
     setData(data.map((row) => ({ ...row, [newKey]: "" })));
   };
 
-  // Handle input change
   const handleInputChange = (
     rowIndex: number,
     key: string,
@@ -112,61 +111,90 @@ const Table: React.FC = () => {
     setData(updatedData);
   };
 
+  const handleColumnFocus = (colIndex: number) => {
+    setActiveColumn(colIndex + 1);
+  };
+
+  const handleRowFocus = (rowIndex: number) => {
+    setActiveRow(rowIndex + 1);
+  };
+
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse border border-gray-300">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border border-gray-300 p-2 w-10"></th>
-            <th className="border border-gray-300 p-2 w-10"></th>
-            {columns.map((col, colIndex) => (
-              <th key={colIndex} className="border border-gray-300 p-2">
-                <img
-                  src={col.icon}
-                  alt={col.title}
-                  className="inline-block w-6 h-6 mr-2"
-                />
-                {col.title}
-              </th>
-            ))}
-            <th className="border border-gray-300 p-2">
-              <button onClick={addColumn} className="text-blue-500 underline">
-                + Add New Column
-              </button>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={rowIndex} className="hover:bg-gray-50">
-              <td className="border border-gray-300 p-2">{rowIndex + 1}</td>
-              {/* Second Column with Play Icon */}
-              <td className="border border-gray-300 p-2 text-center">
-                <CirclePlay className="text-blue-400 w-6 h-6 inline-block" />
-              </td>
+    <div>
+      <HeadingBar
+        activeRow={activeRow}
+        totalRows={data.length}
+        activeColumn={activeColumn}
+        totalColumns={columns.length}
+      />
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse border border-gray-300">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="border border-gray-300 p-2 w-10"></th>
+              <th className="border border-gray-300 p-2 w-10"></th>
               {columns.map((col, colIndex) => (
-                <td key={colIndex} className="border border-gray-300 p-2">
-                  <input
-                    type="text"
-                    value={row[col.key]}
-                    onChange={(e) =>
-                      handleInputChange(rowIndex, col.key, e.target.value)
-                    }
-                    className="w-full bg-transparent outline-none"
+                <th key={colIndex} className="border border-gray-300 p-2">
+                  <img
+                    src={col.icon}
+                    alt={col.title}
+                    className="inline-block w-6 h-6 mr-2"
                   />
-                </td>
+                  {col.title}
+                </th>
               ))}
+              <th className="border border-gray-300 p-2">
+                <button
+                  onClick={addColumn}
+                  className="text-blue-500 underline"
+                >
+                  + Add New Column
+                </button>
+              </th>
             </tr>
-          ))}
-          <tr>
-            <td colSpan={columns.length + 3} className="border border-gray-300 p-2 text-center">
-              <button onClick={addRow} className="text-blue-500 underline">
-                + Add Row
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((row, rowIndex) => (
+              <tr
+                key={rowIndex}
+                className="hover:bg-gray-50"
+                onClick={() => handleRowFocus(rowIndex)}
+              >
+                <td className="border border-gray-300 p-2">{rowIndex + 1}</td>
+                <td className="border border-gray-300 p-2 text-center">
+                  <CirclePlay className="text-blue-400 w-6 h-6 inline-block" />
+                </td>
+                {columns.map((col, colIndex) => (
+                  <td
+                    key={colIndex}
+                    className="border border-gray-300 p-2"
+                    onClick={() => handleColumnFocus(colIndex)}
+                  >
+                    <input
+                      type="text"
+                      value={row[col.key]}
+                      onChange={(e) =>
+                        handleInputChange(rowIndex, col.key, e.target.value)
+                      }
+                      className="w-full bg-transparent outline-none"
+                    />
+                  </td>
+                ))}
+              </tr>
+            ))}
+            <tr>
+              <td
+                colSpan={columns.length + 3}
+                className="border border-gray-300 p-2 text-center"
+              >
+                <button onClick={addRow} className="text-blue-500 underline">
+                  + Add Row
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
