@@ -53,7 +53,7 @@ const colData = [
   {
     key: "enrich",
     title: "Enrich Company",
-    icon: "/enrich.svg",
+    icon: "/enrish.svg",
   },
 ];
 
@@ -61,12 +61,31 @@ const Table: React.FC = () => {
   const [data, setData] = useState<TableRow[]>(tableData);
   const [columns, setColumns] = useState<ColumnData[]>(colData);
 
+  // Helper function to format the current date
+  const getCurrentDate = () => {
+    const now = new Date();
+    const options: Intl.DateTimeFormatOptions = {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    };
+    return now.toLocaleDateString("en-US", options);
+  };
+
   // Add a new row
   const addRow = () => {
-    const newRow: TableRow = columns.reduce(
-      (acc, col) => ({ ...acc, [col.key]: "" }),
-      {}
-    );
+    const newRow: TableRow = columns.reduce((acc, col) => {
+      // Populate the "input" column with the current date
+      if (col.key === "input") {
+        acc[col.key] = getCurrentDate();
+      } else {
+        acc[col.key] = "";
+      }
+      return acc;
+    }, {} as TableRow);
     setData([...data, newRow]);
   };
 
