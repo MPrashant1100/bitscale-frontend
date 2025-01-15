@@ -1,8 +1,8 @@
 const Sidebar = () => {
     const topSidebarItems = [
       { label: "Files", icon: "/file.svg" },
-      { label: "Circle", icon: "/intersect-circle.svg" },
       { label: "Puzzle", icon: "/puzzle-piece-01.svg" },
+      { label: "Circle", icon: "/intersect-circle.svg" },
     ];
   
     const bottomSidebarItems = [

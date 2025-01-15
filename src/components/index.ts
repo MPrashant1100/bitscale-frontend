@@ -3,6 +3,7 @@ import DashboardContainer from './DashboardContainer'
 import Sidebar from './Sidebar'
 import MainComponent from './MainComponent'
 import HeadingBar from './HeadingBar'
+import Table from './Table'
 
 
 export {
@@ -11,4 +12,5 @@ export {
     DashboardContainer,
     MainComponent,
     HeadingBar,
+    Table,
 }
